@@ -1,0 +1,67 @@
+# Bridg Money Admin Frontend - HTTPS
+server {
+    listen 443 ssl;
+    server_name admin-qa.bridg.money;
+
+    ssl_certificate /etc/nginx/certs/fullchain.pem;
+    ssl_certificate_key /etc/nginx/certs/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    access_log /var/log/nginx/bridg-money-admin-ui.log;
+    error_log  /var/log/nginx/bridg-money-admin-ui-error.log;
+
+    root /usr/share/nginx/html/admin/dist;
+    index index.html;
+
+    location / {
+         try_files $uri /index.html;
+    }
+}
+
+# Bridg Money Admin Frontend - HTTP (redirect to HTTPS)
+server {
+    listen 80;
+    server_name admin-qa.bridg.money;
+
+    access_log /var/log/nginx/bridg-money-admin-ui-access.log;
+    error_log  /var/log/nginx/bridg-money-admin-ui-error.log;
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# Bridg Money Mobile Frontend - HTTPS
+server {
+    listen 443 ssl;
+    server_name merchant-qa.bridg.money;
+
+    ssl_certificate /etc/nginx/certs/fullchain.pem;
+    ssl_certificate_key /etc/nginx/certs/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    access_log /var/log/nginx/bridg-money-merchant-ui-access.log;
+    error_log  /var/log/nginx/bridg-money-merchant-qa-error.log;
+
+    root /usr/share/nginx/html/services/dist;
+    index index.html;
+
+    location / {
+        try_files $uri /index.html;
+    }
+}
+
+# Bridg Money Mobile Frontend - HTTP (redirect to HTTPS)
+server {
+    listen 80;
+    server_name merchant-qa.bridg.money;
+
+    access_log /var/log/nginx/bridg-money-merchant-ui-access.log;
+    error_log  /var/log/nginx/bridg-money-merchant-ui-error.log;
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
